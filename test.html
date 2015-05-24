@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<style>
+	.centered{text-align:center;}
+	 .error{color:red;}
+	@media only screen and (max-width: 760px),(min-device-width: 768px) and (max-device-width: 1024px)  {
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	tr { border: 1px solid #ccc; }
+	td#descript{
+		display: None;
+	}
+	td#pic{
+		display: None;
+	}
+
+}
+	
+	</style>
+  <title>TestField</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <script src="jquery-2.1.3.min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+<body>
+		<div class='container'>
+		<div align='center'>
+			<form method="get" class="form" role="form" id="search_form" data-toggle="validator">
+		    	<div class="form-group">
+		        	<label class="control-label" for="keywords"><h1>Enter the Keyword</h1></label>
+			        
+			              <input type="text" class="form-control" id="keywords" name="keywords" placeholder="Enter keyword" style="width:300px;">
+			           
+			            
+				</div>
+		  
+		              <button type="submit" class="btn btn-primary">Search</button>
+		         
+			</form><br>
+		
+	  <div class="search-results"></div>
+	  	</div>
+	  </div>
+	 <script>
+	 
+
+		 $(document).ready(function() {
+		 	$("#search_form").validate({
+		    
+		        // Specify the validation rules
+		        rules: {
+		            keywords:"required",
+		        },
+		        // Specify the validation error messages
+		        messages: {
+		            keywords:"Please enter key word",
+		        },
+		        highlight: function(element, errorClass) {
+		          $(element).css("border","1px solid red");
+		                    //$(element).closest('.input-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function(element, errorClass) {
+		          $(element).css("border","");
+		                    //$(element).closest('.input-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		          $(".search-results").empty();
+		          makeAJAX();
+		        }
+		    });
+
+
+		 });
+
+		 function makeAJAX() {
+				  var d=$("#search_form").serialize();
+				  $.ajax({
+				    url:"TestField.php",
+				    data:d,
+				    type:'GET',
+				    //beforeSend:function(a,b,c){
+				      //debugger;
+				    //},
+				    success: function(output){
+				        //debugger;
+				        console.log(output);
+				        var obj=jQuery.parseJSON(output);
+				        
+				        if(obj.count=="0")
+				        { //debugger;
+				          $(".search-results").html("<div class='centered'><h2>No Results Found</h2></div>");
+				        }
+				        else
+				        {
+				          display(obj);
+				        }
+				    },
+				    error:function(a,b,c){
+				      //debugger;
+				      console.log(a);
+				      console.log(b);
+				      console.log(c);}
+				    
+				  });  
+			}
+
+
+			function display(obj)
+				{ var a = parseInt(obj.count);
+					var html="<div>";     
+				  html+="<table class='table table-bordered'>\
+				  <thead>\
+				      <tr>\
+				      	<div class='row'>\
+				      		<div class='col-xs-4'>\
+				        		<th class='centered'>TITLE</th>\
+				        	</div>\
+				        	<div class='col-xs-4'>\
+				        		<th class='centered'>Description</th>\
+				        	</div>\
+				        	<div class='col-xs-4'>\
+				        		<th class='centered'>Image</th>\
+				        	</div>\
+				        </div>\
+				      </tr>\
+				    </thead>\
+				    <tbody>";
+				  for (var j=1;j<=a;j++)
+				  { html+="<tr>\
+									<td class='centered'><a href='"+obj['item'+j].url+"'>"+obj['item'+j].titl+"</a></td>\
+									<td id='descript' class='centered'>"+obj['item'+j].descript+"</td>\
+									<td id='pic'><img height='100px' width='100px' class='img-thumbnail' align='center' src="+obj['item'+j].imag+"></td>\
+						   </tr>";
+				  }
+				  html+="</tr>\
+				    </tbody>\
+				  </table>\
+				</div>";
+				$(".search-results").html(html);
+
+			}
+	 </script>
+</body>
+</html>
