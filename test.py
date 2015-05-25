@@ -1,29 +1,47 @@
+__author__ = 'parthdhj'
 import requests
 from bs4 import BeautifulSoup
 import time
-from pyvirtualdisplay import Display
-from selenium import webdriver
+from sys import exit
 import MySQLdb
-def trade_spider():
-        url = 'http://mashable.com'
-        display = Display(visible=0, size=(1024, 768))
-        display.start()
-        driver = webdriver.Firefox()
-        driver.get(url)
-        t= time.time()
-        t+=180
-        while time.time()<t:
-            #print (t)
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        html_source = driver.page_source
-        data = html_source.encode('utf-8')
-        soup = BeautifulSoup(data)
-        for link in soup.findAll('h1'):
+t= time.time()
+start_t=t
+t+=600
+def webcrawler(url):
+    source_code = requests.get(url)
+    plain_text = source_code.text
+    soup = BeautifulSoup(plain_text)
+    for link in soup.findAll('h1'):
             href=link.a
             if href!= None:
-                       get_single_post_data(str(href.get('href')))
-        driver.close()
-        display.stop()
+                if time.time()<t:
+                    get_single_post_data(str(href.get('href')))
+                else:
+                    #print(time.time()-start_t)
+                    exit(0)
+    for link in soup.findAll('li',{'class':'collapsable channel submenu'}):
+        href=link.a
+        #new_link= "http://mashable.com" + href.get('href')
+        #if time.time()<t:
+            #new_link_post_data(new_link)
+        #else:
+            #print(time.time()-start_t)
+            #exit(0)
+        d_tag = link.get('data-tags')
+        s=d_tag.split(',')
+        if href.text == 'Social Media':
+                pass
+        else:
+            for l in s:
+                new_l="http://mashable.com/" + l
+                #print(new_l)
+                if time.time()<t:
+                     new_link_post_data(new_l)
+                else:
+                    #print(time.time()-start_t)
+                    exit(0)
+
+
 
 
 
@@ -79,9 +97,23 @@ def get_single_post_data(url):
 
 
 
+def new_link_post_data(url):
+    #print(url)
+    source_code = requests.get(url)
+    plain_text = source_code.text
+    soup = BeautifulSoup(plain_text)
+    for link in soup.findAll('h1'):
+            href=link.a
+            if href!= None:
+                if time.time()<t:
+                    get_single_post_data(str(href.get('href')))
+                else:
+                    #print(time.time()-start_t)
+                    exit(0)
 
-trade_spider()
 
 
 
 
+webcrawler('http://mashable.com')
+#print(time.time()-start_t)
