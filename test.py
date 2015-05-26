@@ -62,6 +62,7 @@ def get_single_post_data(url):
                 #print(url_link)
         for link in head.findAll('meta'):
             prop=link.get('property')
+            nam=link.get('name')
             #print(prop)
             if prop == 'og:title':
                 title=link.get('content')
@@ -69,7 +70,7 @@ def get_single_post_data(url):
             if prop =='og:description':
                 description=link.get('content')
                 #print(description)
-            if prop =='og:image':
+            if nam =='sailthru.image.thumb':
                 image=link.get('content')
                 #print(image)
         db = MySQLdb.connect("ec2-52-10-122-11.us-west-2.compute.amazonaws.com", "root", "", "test")
@@ -116,4 +117,4 @@ def new_link_post_data(url):
 
 
 webcrawler('http://mashable.com')
-#print(time.time()-start_t)
+print(time.time()-start_t)

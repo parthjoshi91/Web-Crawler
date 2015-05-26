@@ -5,6 +5,9 @@
 	.centered{text-align:center;}
 	 .error{color:red;}
 	@media only screen and (max-width: 760px),(min-device-width: 768px) and (max-device-width: 1024px)  {
+	table{
+		width:100%;
+	}
 	thead tr { 
 		position: absolute;
 		top: -9999px;
@@ -12,12 +15,9 @@
 	}
 	tr td {
 		background-color: #EEFFFA;
+		border:0px;
 	}
-	tr { border: 1px solid #ccc; }
 	td#descript{
-		display: None;
-	}
-	td#pic{
 		display: None;
 	}
 
@@ -141,7 +141,7 @@
 				  { html+="<tr>\
 									<td class='centered'><a href='"+obj['item'+j].url+"'>"+obj['item'+j].titl+"</a></td>\
 									<td id='descript' class='centered'>"+obj['item'+j].descript+"</td>\
-									<td id='pic'><img height='100px' width='100px' class='img-thumbnail' align='center' src="+obj['item'+j].imag+"></td>\
+									<td id='pic'><img height='100px' width='100px' align='center' src="+obj['item'+j].imag+"></td>\
 						   </tr>";
 				  }
 				  html+="</tr>\
