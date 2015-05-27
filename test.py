@@ -17,7 +17,7 @@ def webcrawler(url):
                 if time.time()<t:
                     get_single_post_data(str(href.get('href')))
                 else:
-                    #print(time.time()-start_t)
+                    print(time.time()-start_t)
                     exit(0)
     for link in soup.findAll('li',{'class':'collapsable channel submenu'}):
         href=link.a
@@ -38,7 +38,7 @@ def webcrawler(url):
                 if time.time()<t:
                      new_link_post_data(new_l)
                 else:
-                    #print(time.time()-start_t)
+                    print(time.time()-start_t)
                     exit(0)
 
 
@@ -90,10 +90,18 @@ def get_single_post_data(url):
                     db.commit()
                     #print("ok")
                 else:
-                    #print(time.time()-start_t)
+                    print(time.time()-start_t)
                     exit(0)
             except:
                 db.rollback()
+        for link in soup.findAll('h1'):
+            href=link.a
+            if href!= None:
+                if time.time()<t:
+                    get_single_post_data(str(href.get('href')))
+                else:
+                    print(time.time()-start_t)
+                    exit(0)
 
 
 
@@ -109,7 +117,7 @@ def new_link_post_data(url):
                 if time.time()<t:
                     get_single_post_data(str(href.get('href')))
                 else:
-                    #print(time.time()-start_t)
+                    print(time.time()-start_t)
                     exit(0)
 
 
